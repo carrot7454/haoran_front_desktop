@@ -1,0 +1,8 @@
+.knowledgeContainer {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 20px;
+}
+.knowledgeContainer :global .ant-form-item {
+  margin-right: 20px;
+}

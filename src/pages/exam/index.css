@@ -1,0 +1,12 @@
+.container {
+  background: #fff;
+  border-radius: 20px;
+  padding: 20px;
+}
+.container :global .container {
+  display: flex;
+}
+.container :global .container .item {
+  width: 200px;
+  margin-right: 20px;
+}

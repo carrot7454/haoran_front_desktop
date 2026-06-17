@@ -1,0 +1,36 @@
+{
+  "private": true,
+  "author": "carrot7454 <carrot.008@163.com>",
+  "scripts": {
+    "dev": "max dev",
+    "build": "max build",
+    "format": "prettier --cache --write .",
+    "prepare": "husky",
+    "postinstall": "max setup",
+    "setup": "max setup",
+    "start": "npm run dev"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^5.0.1",
+    "@ant-design/pro-components": "^2.4.4",
+    "@shopify/draggable": "^1.2.1",
+    "@umijs/max": "^4.6.57",
+    "antd": "^5.4.0",
+    "pdfjs-dist": "^6.0.227",
+    "react-beautiful-dnd": "^13.1.1",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
+    "react-draggable": "^4.6.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.33",
+    "@types/react-beautiful-dnd": "^13.1.8",
+    "@types/react-dom": "^18.0.11",
+    "husky": "^9",
+    "lint-staged": "^13.2.0",
+    "prettier": "^2.8.7",
+    "prettier-plugin-organize-imports": "^3.2.2",
+    "prettier-plugin-packagejson": "^2.4.3",
+    "typescript": "^5.0.3"
+  }
+}
