@@ -20,6 +20,14 @@ export const queryclass = async (data: any) => {
   return await http('/knowladge/classlist', 'POST', data);
 };
 
+export const queryKnowledge = async (data: any) => {
+  return await http('/knowladge/knowledgelist', 'POST', data);
+};
+
 export const addKnowledge = async (data: any) => {
   return await http('/knowladge/add', 'POST', data);
+};
+
+export const queryKnowledgeSelect = async (data: any) => {
+  return await http('/knowladge/simpleKnowledge', 'POST', data);
 };
