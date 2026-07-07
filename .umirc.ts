@@ -19,6 +19,20 @@ export default defineConfig({
     icon: '/public/zhishi.jpg',
     logo: '/public/zhishi.jpg',
   },
+  metas: [
+    {
+      'http-equiv': 'cache-control',
+      content: 'no-cache, no-store, must-revalidate',
+    },
+    {
+      'http-equiv': 'pragma',
+      content: 'no-cache',
+    },
+    {
+      'http-equiv': 'expires',
+      content: '0',
+    },
+  ],
   routes: [
     {
       path: '/login',
