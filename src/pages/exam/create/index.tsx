@@ -6,6 +6,7 @@ import { addQues, queryKnowledgeSelect, upload } from '@/services/api';
 import { PageContainer } from '@ant-design/pro-components';
 import {
   Button,
+  Cascader,
   Col,
   Form,
   Image,
@@ -13,7 +14,6 @@ import {
   message,
   Rate,
   Row,
-  Select,
   Upload,
 } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
@@ -36,7 +36,10 @@ export default function PdfToImages(): JSX.Element {
   useEffect(() => {
     queryKnowledgeSelect({}).then((res) => {
       if (res.code === 200) {
-        setKnowledgeList(res.data.data);
+        const data = res.data.data.filter(
+          (item: any) => item.children && item.children.length > 0,
+        );
+        setKnowledgeList(data);
       }
     });
     return () => {
@@ -180,6 +183,12 @@ export default function PdfToImages(): JSX.Element {
     }
     form.validateFields().then((values) => {
       console.log('Form values:', values, items, file);
+      if (!values.knowledgeId?.[1]) {
+        message.error('该年级没有知识领域');
+        return;
+      } else {
+        values.knowledgeId = values.knowledgeId[1];
+      }
       const data = {
         ...values,
         pics: items.map((it) => it.dataUrl),
@@ -235,7 +244,8 @@ export default function PdfToImages(): JSX.Element {
                 required
                 rules={[{ required: true, message: '请选择知识领域' }]}
               >
-                <Select
+                <Cascader
+                  showCheckedStrategy={Cascader.SHOW_CHILD}
                   options={knowledgeList}
                   fieldNames={{
                     label: 'name',
