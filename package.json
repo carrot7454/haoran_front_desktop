@@ -16,6 +16,8 @@
     "@shopify/draggable": "^1.2.1",
     "@umijs/max": "^4.6.57",
     "antd": "^5.4.0",
+    "braft-editor": "^2.3.9",
+    "dayjs": "^1.11.23",
     "pdfjs-dist": "^6.0.227",
     "react-beautiful-dnd": "^13.1.1",
     "react-dnd": "^16.0.1",

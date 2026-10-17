@@ -2,8 +2,12 @@
  * @Author: Luoxiangyu
  * @LastEditors: Luoxiangyu
  */
-import { addKnowledge, queryclass, queryKnowledge } from '@/services/api';
-import { PlusOutlined } from '@ant-design/icons';
+import { addKnowledge, queryclass, uploadclass } from '@/services/api';
+import {
+  PlusOutlined,
+  PlusSquareOutlined,
+  RightOutlined,
+} from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import {
   Button,
@@ -13,8 +17,8 @@ import {
   message,
   Modal,
   Row,
-  Select,
-  Table,
+  Spin,
+  Upload,
 } from 'antd';
 import { useEffect, useState } from 'react';
 import style from './index.less';
@@ -22,77 +26,91 @@ import style from './index.less';
 interface IClass {
   id: number;
   name: string;
+  code: string;
+  isActive: boolean;
+  children: IClass[];
 }
 
 export default function Knowledge() {
   const [form] = Form.useForm();
   const [classList, setClassList] = useState<IClass[]>([]);
-  const [knowledgeList, setKnowledgeList] = useState<any[]>([]);
   const [knowshowModal, setKnowshowModal] = useState(false);
-  const [total, setTotal] = useState(0);
-  const [page, setPage] = useState(1);
-  const [size, setSize] = useState(10);
+  const [type, setType] = useState(1);
+  const [serial, setSerial] = useState<IClass[]>([]);
+  const [knowls, setKnowls] = useState<IClass[]>([]);
+  const [firstClass, setFirstClass] = useState<number>(0);
+  const [secondClass, setSecondClass] = useState<number>(0);
+  const [openUploadModal, setOpenUploadModal] = useState(false);
 
-  const getKnowledgeList = async (page: number = 1, size: number = 10) => {
-    queryKnowledge({ page, size }).then((res) => {
+  // const getKnowledgeList = async (page: number = 1, size: number = 10) => {
+  //   queryKnowledge({ page, size }).then((res) => {
+  //     if (res.code === 200) {
+  //       setKnowledgeList(res.data.list);
+  //       setTotal(res.data.total);
+  //       setPage(res.data.page);
+  //       setSize(res.data.size);
+  //     } else {
+  //       message.error(res.message || '查询知识库失败');
+  //     }
+  //   });
+  // };
+
+  const getClassList = async () => {
+    queryclass({}).then((res) => {
+      console.log(res);
       if (res.code === 200) {
-        setKnowledgeList(res.data.list);
-        setTotal(res.data.total);
-        setPage(res.data.page);
-        setSize(res.data.size);
-      } else {
-        message.error(res.message || '查询知识库失败');
+        const _class = res.data.map((item: any, index: number) => {
+          return {
+            ...item,
+            isActive: index === 0,
+          };
+        });
+        const _serial = res.data[0].children.map((item: any, index: number) => {
+          return {
+            ...item,
+            isActive: index === 0,
+          };
+        });
+        const _knowls = res.data[0].children[0].children.map(
+          (item: any, index: number) => {
+            return {
+              ...item,
+              isActive: index === 0,
+            };
+          },
+        );
+        setClassList(_class);
+        setSerial(_serial);
+        setKnowls(_knowls);
       }
     });
   };
 
   useEffect(() => {
-    queryclass({}).then((res) => {
-      console.log(res);
-      if (res.code === 200) {
-        setClassList(res.data);
-      }
-    });
-    getKnowledgeList();
+    getClassList();
   }, []);
 
   const submitForm = async () => {
     const values = await form.validateFields();
     console.log(values);
-    const data = await addKnowledge(values);
+    const _data = values;
+    if (type === 2) {
+      _data.classid = classList[firstClass].code;
+    }
+    if (type === 3) {
+      _data.classid = classList[firstClass].code;
+      _data.serialid = serial[secondClass].code;
+    }
+    const data = await addKnowledge(_data);
     console.log(data);
     if (data.code === 200) {
       message.success('添加成功');
+      getClassList();
     } else {
       message.error(data.message || '提交失败');
     }
     form.resetFields();
-    getKnowledgeList();
     setKnowshowModal(false);
-  };
-
-  const columns = [
-    {
-      title: 'ID',
-      dataIndex: 'id',
-    },
-    {
-      title: '知识点名称',
-      dataIndex: 'knowladgename',
-    },
-    {
-      title: '所属年级',
-      dataIndex: 'classname',
-    },
-  ];
-
-  const pagination = {
-    total,
-    current: page,
-    pageSize: size,
-    onChange: (page, pageSize) => {
-      queryKnowledge({ page, size: pageSize });
-    },
   };
 
   return (
@@ -106,22 +124,150 @@ export default function Knowledge() {
               marginBottom: '20px',
             }}
           >
-            <Button
-              type="primary"
-              onClick={() => {
-                setKnowshowModal(true);
+            <Upload
+              name="file"
+              beforeUpload={async (file) => {
+                setOpenUploadModal(true);
+                const formData = new FormData();
+                formData.append('file', file);
+                const data = await uploadclass(formData);
+                if (data.code === 200) {
+                  message.success('上传成功');
+                  getClassList();
+                }
+                setOpenUploadModal(false);
+                return false;
               }}
+              showUploadList={false}
             >
-              添加
-              <PlusOutlined />
-            </Button>
+              <Button type="primary">
+                批量添加
+                <PlusOutlined />
+              </Button>
+            </Upload>
           </div>
-          <Table
-            dataSource={knowledgeList}
-            columns={columns}
-            pagaination={pagination}
-            rowKey="id"
-          />
+          <div className={style.main}>
+            <div className={style.main_ls}>
+              <div className={style.main_ls_title}>
+                年级{classList?.length && `(${classList.length})`}
+                <div className={style.main_ls_title_add}>
+                  <PlusSquareOutlined
+                    onClick={() => {
+                      setKnowshowModal(true);
+                      setType(1);
+                    }}
+                  />
+                </div>
+              </div>
+              <div className={style.main_ls_con}>
+                {classList?.map((item, index) => (
+                  <div
+                    className={`${style.main_ls_con_item} ${
+                      item.isActive && style.active
+                    }`}
+                    onClick={() => {
+                      const _ls = classList.map((item, idx) => ({
+                        ...item,
+                        isActive: idx === index,
+                      }));
+                      const _ls1 = _ls[index]?.children.map((item, index) => ({
+                        ...item,
+                        isActive: index === 0,
+                      }));
+                      const _ls2 = _ls[index]?.children[0]?.children.map(
+                        (item, index) => ({
+                          ...item,
+                          isActive: index === 0,
+                        }),
+                      );
+                      setClassList(_ls);
+                      setSerial(_ls1);
+                      setKnowls(_ls2);
+                      setFirstClass(index);
+                    }}
+                    key={item.id}
+                  >
+                    {item.name}
+                    {item.isActive && <RightOutlined />}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className={style.symbol}>&gt;&gt;</div>
+            <div className={style.main_ls}>
+              <div className={style.main_ls_title}>
+                章节{serial?.length && `(${serial.length})`}
+                <div className={style.main_ls_title_add}>
+                  <PlusSquareOutlined
+                    onClick={() => {
+                      setKnowshowModal(true);
+                      setType(2);
+                    }}
+                  />
+                </div>
+              </div>
+              <div className={style.main_ls_con}>
+                {serial?.map((item, index) => (
+                  <div
+                    className={`${style.main_ls_con_item} ${
+                      item.isActive && style.active
+                    }`}
+                    onClick={() => {
+                      const _ls = serial.map((item, idx) => ({
+                        ...item,
+                        isActive: idx === index,
+                      }));
+                      const _ls2 = _ls[index]?.children.map((item, index) => ({
+                        ...item,
+                        isActive: index === 0,
+                      }));
+                      setSerial(_ls);
+                      setKnowls(_ls2);
+                      setSecondClass(index);
+                    }}
+                    key={item.id}
+                  >
+                    {item.name}
+                    {item.isActive && <RightOutlined />}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className={style.symbol}>&gt;&gt;</div>
+            <div className={style.main_ls}>
+              <div className={style.main_ls_title}>
+                知识点{knowls?.length && `(${knowls.length})`}
+                <div className={style.main_ls_title_add}>
+                  <PlusSquareOutlined
+                    onClick={() => {
+                      setKnowshowModal(true);
+                      setType(3);
+                    }}
+                  />
+                </div>
+              </div>
+              <div className={style.main_ls_con}>
+                {knowls?.map((item, index) => (
+                  <div
+                    className={`${style.main_ls_con_item} ${
+                      item.isActive && style.active
+                    }`}
+                    onClick={() => {
+                      const _ls = knowls.map((item, idx) => ({
+                        ...item,
+                        isActive: idx === index,
+                      }));
+
+                      setKnowls(_ls);
+                    }}
+                    key={item.id}
+                  >
+                    {item.name}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <Modal
@@ -145,25 +291,26 @@ export default function Knowledge() {
               </Form.Item>
             </Col>
           </Row>
-          <Row>
-            <Col>
-              <Form.Item
-                label="所属年级"
-                name="class"
-                required
-                rules={[{ required: true, message: '请选择所属年级' }]}
-              >
-                <Select
-                  placeholder="请选择所属年级"
-                  options={classList.map((item) => ({
-                    label: item.name,
-                    value: item.id,
-                  }))}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
         </Form>
+      </Modal>
+      <Modal
+        footer={null}
+        centered
+        title={null}
+        open={openUploadModal}
+        closable={false}
+        width={150}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          上传中...&nbsp;&nbsp;
+          <Spin />
+        </div>
       </Modal>
     </PageContainer>
   );

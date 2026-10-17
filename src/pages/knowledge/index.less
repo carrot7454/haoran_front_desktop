@@ -1,11 +1,56 @@
 .knowledgeContainer {
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 20px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 20px;
 
-    :global {
-        .ant-form-item {
-            margin-right: 20px;
-        }
+  :global {
+    .ant-form-item {
+      margin-right: 20px;
     }
+  }
+  .main {
+    height: 600px;
+    display: flex;
+    .main_ls {
+      flex: 1;
+      padding-bottom: 20px;
+      border-radius: 20px;
+      border: 1px solid #b8def3;
+      overflow-x: auto;
+
+      .main_ls_title {
+        padding: 10px 0;
+        text-align: center;
+        background-color: #a3d6f1;
+        position: relative;
+        .main_ls_title_add{
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #fff;
+        }
+      }
+      .main_ls_con {
+        .main_ls_con_item {
+            padding: 10px 20px;
+            border-bottom: 1px solid #b5b5b5;
+            display: flex;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+        .active{
+            background-color: #aaf3d5;
+            color: #fff;
+        }
+      }
+    }
+    .symbol {
+      margin: 0 10px;
+      font-size: 20px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+    }
+  }
 }

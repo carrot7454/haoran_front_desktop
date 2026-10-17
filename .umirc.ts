@@ -43,24 +43,49 @@ export default defineConfig({
       path: '/',
       redirect: '/exam',
     },
+    // {
+    //   name: '试卷列表',
+    //   path: '/exam',
+    //   component: './exam',
+    // },
+    // {
+    //   name: '创建试卷',
+    //   path: '/exam/create',
+    //   hideInMenu: true,
+    //   component: './exam/create',
+    // },
     {
-      name: '试卷列表',
-      path: '/exam',
-      component: './exam',
+      name: '试题列表',
+      path: '/question',
+      component: './question',
     },
     {
-      name: '创建试卷',
-      path: '/exam/create',
+      name: '试题创建',
+      path: '/question/create',
+      component: './question/create',
       hideInMenu: true,
-      component: './exam/create',
     },
     {
       name: '知识点管理',
       path: '/knowledge',
       component: './knowledge',
     },
+    {
+      name: '班级分组',
+      path: '/classGroup',
+      component: './classGroup',
+    },
+    {
+      name: '知识点分配',
+      path: '/groupKnow',
+      component: './groupKnow',
+    },
+    {
+      name: '学员列表',
+      path: '/person',
+      component: './person',
+    },
   ],
   npmClient: 'yarn',
   utoopack: {},
-  
 });
