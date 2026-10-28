@@ -85,6 +85,17 @@ export default defineConfig({
       path: '/person',
       component: './person',
     },
+    {
+      name: '试题修改',
+      path: '/quesCheck',
+      component: './quesCheck',
+    },
+    {
+      name: '判卷',
+      hideInMenu: true,
+      path: '/quesCheck/check/:id',
+      component: './quesCheck/check/index',
+    },
   ],
   npmClient: 'yarn',
   utoopack: {},

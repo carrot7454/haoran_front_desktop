@@ -1,0 +1,47 @@
+.QuesReview {
+  min-height: 600px;
+  padding: 20px;
+  border-radius: 20px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  .QuesReview_title {
+    font-size: 20px;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    border-left: 4px solid #108ee9;
+    padding-left: 10px;
+    span {
+      color: #108ee9;
+    }
+  }
+  .QuesReview_content {
+    display: flex;
+    flex: 1;
+     border-top: 1px solid #e8e8e8;
+    .QuesReview_left {
+      width: 50%;
+      padding: 20px;
+      border-right: 1px solid #e8e8e8;
+      .QuesReview_left_title{
+        font-size: 18px;
+        font-weight: 500;
+        margin-bottom: 10px;
+      }
+      img{
+        width: 100%;
+      }
+    }
+    .QuesReview_right {
+      flex: 1;
+      padding: 20px;
+      .QuesReview_right_title{
+        font-size: 18px;
+        font-weight: 500;
+        margin-bottom: 10px;
+      }
+    }
+  }
+}

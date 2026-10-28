@@ -59,3 +59,15 @@ export const pairClassKnowledge = async (data: any) => {
 export const getUserList = async (data: any) => {
   return await http('/user/list', 'POST', data);
 };
+
+export const getExamList = async (data: any) => {
+  return await http('/questions/getUserQuesList', 'POST', data);
+};
+
+export const getExamDetail = async (data: any) => {
+  return await http('/questions/getQuesDetail', 'POST', data);
+};
+
+export const finishQuesUser = async (data: any) => {
+  return await http('/questions/newFinishUserQues', 'POST', data);
+};
