@@ -41,7 +41,7 @@ export default defineConfig({
     },
     {
       path: '/',
-      redirect: '/exam',
+      redirect: '/question',
     },
     // {
     //   name: '试卷列表',
