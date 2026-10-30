@@ -34,7 +34,7 @@ export default function Login() {
           JSON.stringify({ username: values.username }),
         );
         // 跳转到首页
-        history.push('/exam');
+        history.push('/question');
       } else {
         message.error('用户名或密码错误');
       }
